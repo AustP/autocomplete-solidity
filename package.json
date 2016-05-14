@@ -1,21 +1,24 @@
 {
-    "name": "autocomplete-solidity",
-    "main": "./src/autocomplete-solidity",
-    "version": "0.0.0",
-    "description": "Autocomplete+ provider for Solidity",
-    "keywords": [
-        "solidity", "autocomplete", "ethereum", "ether"
-    ],
-    "repository": "https://github.com/austp/autocomplete-solidity",
-    "license": "MIT",
-    "engines": {
-        "atom": ">=1.0.0 <2.0.0"
-    },
-    "providedServices": {
-        "autocomplete.provider": {
-            "versions": {
-                "2.0.0": "provide"
-            }
-        }
+  "name": "autocomplete-solidity",
+  "main": "./src/autocomplete-solidity",
+  "version": "0.1.0",
+  "description": "Autocomplete+ provider for Solidity",
+  "keywords": [
+    "solidity",
+    "autocomplete",
+    "ethereum",
+    "ether"
+  ],
+  "repository": "https://github.com/austp/autocomplete-solidity",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "providedServices": {
+    "autocomplete.provider": {
+      "versions": {
+        "2.0.0": "provide"
+      }
     }
+  }
 }
