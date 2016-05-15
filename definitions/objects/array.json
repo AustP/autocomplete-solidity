@@ -1,0 +1,14 @@
+{
+    ".length": {
+        "description": "The array's current length",
+        "leftLabel": "uint",
+        "text": ".length",
+        "type": "property"
+    },
+    ".push": {
+        "description": "Add an item to dynamic storage arrays or bytes (not string)",
+        "leftLabel": "uint",
+        "snippet": ".push(${1:item})${2}",
+        "type": "method"
+    }
+}

@@ -1,0 +1,38 @@
+{
+    ".blockhash": {
+        "description": "Returns the hash of the given block",
+        "leftLabel": "uint",
+        "snippet": ".blockhash(${1})${2}",
+        "type": "method"
+    },
+    ".coinbase": {
+        "description": "Current block's miner's address",
+        "leftLabel": "address",
+        "text": ".coinbase",
+        "type": "property"
+    },
+    ".difficulty": {
+        "description": "Current block's difficulty",
+        "leftLabel": "uint",
+        "text": ".difficulty",
+        "type": "property"
+    },
+    ".gaslimit": {
+        "description": "Current block's gas limit",
+        "leftLabel": "uint",
+        "text": ".gaslimit",
+        "type": "property"
+    },
+    ".number": {
+        "description": "Current block's number",
+        "leftLabel": "uint",
+        "text": ".number",
+        "type": "property"
+    },
+    ".timestamp": {
+        "description": "Current block's timestamp",
+        "leftLabel": "uint",
+        "text": ".timestamp",
+        "type": "property"
+    }
+}

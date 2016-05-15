@@ -1,94 +1,9 @@
 {
-    ".balance": {
-        "description": "The address's current balance",
-        "leftLabel": "uint",
-        "text": ".balance",
-        "type": "property"
-    },
-    ".call": {
-        "description": "Interface with a contract that does not adhere to the ABI",
-        "leftLabel": "bool",
-        "snippet": ".call(${1})${2}",
-        "type": "method"
-    },
-    ".delegatecall": {
-        "description": "Use library code which is stored in another contract",
-        "leftLabel": "bool",
-        "snippet": ".delegatecall(${1})${2}",
-        "type": "method"
-    },
-    ".length": {
-        "description": "The array's current length",
-        "leftLabel": "uint",
-        "text": ".length",
-        "type": "property"
-    },
-    ".push": {
-        "description": "Add an item to dynamic storage arrays or bytes (not string)",
-        "leftLabel": "uint",
-        "snippet": ".push(${1:item})${2}",
-        "type": "method"
-    },
-    ".send": {
-        "description": "Send ether (in wei) to the address",
-        "leftLabel": "bool",
-        "snippet": ".send(${1:amount})${2}",
-        "type": "method"
-    },
-    
     "address": {
         "description": "Address",
         "leftLabel": "address",
         "text": "address",
         "type": "type"
-    },
-    
-    "anonymous": {
-        "description": "Make the hash of the event signature not be added as a first topic",
-        "text": "anonymous",
-        "type": "keyword"
-    },
-
-    "block": {
-        "description": "Access the current block's properties",
-        "text": "block.",
-        "type": "variable"
-    },
-    "block.blockhash": {
-        "description": "Returns the hash of the given block",
-        "leftLabel": "uint",
-        "snippet": "block.blockhash(${1})${2}",
-        "type": "method"
-    },
-    "block.coinbase": {
-        "description": "Current block's miner's address",
-        "leftLabel": "address",
-        "text": "block.coinbase",
-        "type": "property"
-    },
-    "block.difficulty": {
-        "description": "Current block's difficulty",
-        "leftLabel": "uint",
-        "text": "block.difficulty",
-        "type": "property"
-    },
-    "block.gaslimit": {
-        "description": "Current block's gas limit",
-        "leftLabel": "uint",
-        "text": "block.gaslimit",
-        "type": "property"
-    },
-    "block.number": {
-        "description": "Current block's number",
-        "leftLabel": "uint",
-        "text": "block.number",
-        "type": "property"
-    },
-    "block.timestamp": {
-        "description": "Current block's timestamp",
-        "leftLabel": "uint",
-        "text": "block.timestamp",
-        "type": "property"
     },
     
     "bool": {
@@ -303,30 +218,6 @@
         "type": "type"
     },
     
-    "constant": {
-        "text": "constant",
-        "type": "keyword"
-    },
-    
-    "contract": {
-        "leftLabel": "contract",
-        "snippet": "contract ${1:contractName} {\n\t${2}\n}",
-        "type": "keyword"
-    },
-    
-    "delete": {
-        "description": "Use to delete structs",
-        "text": "delete",
-        "type": "keyword"
-    },
-    
-    "ecrecover": {
-        "description": "Recover the public key from an elliptic curve signature",
-        "leftLabel": "address",
-        "snippet": "ecrecover(${1:data}, ${2:v}, ${3:r}, ${4:s})${5}",
-        "type": "function"
-    },
-    
     "enum": {
         "leftLabel": "enum",
         "text": "enum",
@@ -346,23 +237,11 @@
         "type": "type"
     },
     
-    "external": {
-        "description": "Sets the visibility to contracts only",
-        "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
-        "text": "external",
-        "type": "keyword"
-    },
-    
     "finney": {
         "description": "1 finey == 1000000000000000 wei",
         "leftLabel": "finney",
         "text": "finney",
         "type": "type"
-    },
-    
-    "function": {
-        "snippet": "function ${1:functionName}(${2}) ${3}{\n\t${4}\n}",
-        "type": "keyword"
     },
     
     "hash": {
@@ -564,25 +443,6 @@
         "type": "type"
     },
     
-    "import": {
-        "description": "Imports a Solidity file",
-        "snippet": "import '${1}';${2}",
-        "type": "import"
-    },
-    
-    "indexed": {
-        "description": "Cause the respective argument to be treated as a log topic instead of data",
-        "text": "indexed",
-        "type": "keyword"
-    },
-    
-    "inheritable": {
-        "description": "Sets the visibility to this contract / inherited contracts",
-        "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
-        "text": "inheritable",
-        "type": "keyword"
-    },
-    
     "int": {
         "description": "Integer (256 bits)",
         "leftLabel": "int256",
@@ -782,12 +642,6 @@
         "type": "type"
     },
     
-    "internal": {
-        "description": "Sets visibility so it can only be accessed from internally",
-        "text": "internal",
-        "type": "keyword"
-    },
-    
     "mapping": {
         "leftLabel": "mapping",
         "snippet": "mapping (${1:type1} => ${2:type2}) ${3:name};${4}",
@@ -800,102 +654,11 @@
         "type": "type"
     },
     
-    "msg": {
-        "description": "Access the current message's properties",
-        "text": "msg.",
-        "type": "variable"
-    },
-    "msg.data": {
-        "description": "The data of the message",
-        "leftLabel": "bytes",
-        "text": "msg.data",
-        "type": "property"
-    },
-    "msg.gas": {
-        "description": "The amount of remaining gas",
-        "leftLabel": "uint",
-        "text": "msg.gas",
-        "type": "property"
-    },
-    "msg.sender": {
-        "description": "The address of the message sender",
-        "leftLabel": "address",
-        "text": "msg.sender",
-        "type": "property"
-    },
-    "msg.sig": {
-        "description": "The hash of the current function signature",
-        "leftLabel": "bytes4",
-        "text": "msg.sig",
-        "type": "property"
-    },
-    "msg.value": {
-        "description": "The amount (in wei) sent with the message",
-        "leftLabel": "uint",
-        "text": "msg.value",
-        "type": "property"
-    },
-    
-    "new": {
-        "description": "Create something new",
-        "leftLabel": "?",
-        "text": "new",
-        "type": "keyword"
-    },
-    
-    "now": {
-        "description": "Current block's timestamp (alias for block.timestamp)",
-        "leftLabel": "uint",
-        "text": "now",
-        "type": "variable"
-    },
-    
-    "private": {
-        "description": "Sets the visibility to this contract",
-        "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
-        "text": "private",
-        "type": "keyword"
-    },
-    "public": {
-        "description": "Sets the visibility to anywhere (default)",
-        "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
-        "text": "public",
-        "type": "keyword"
-    },
-    
     "real": {
         "description": "256-bit signed fixed-point quantity, 127-bit left of the point, 128-bit right",
         "leftLabel": "real",
         "text": "real",
-        "type": "keyword"
-    },
-    
-    "return": {
-        "snippet": "return ${1}",
-        "type": "keyword"
-    },
-    "returns": {
-        "snippet": "returns (${1}) ",
-        "type": "keyword"
-    },
-    
-    "ripemd160": {
-        "description": "Computes the RIPEMD-160 hash of the (tightly packed) arguments",
-        "leftLabel": "bytes20",
-        "snippet": "ripemd160(${1})${2}",
-        "type": "function"
-    },
-    "sha256": {
-        "description": "Computes the SHA256 hash of the (tightly packed) arguments",
-        "leftLabel": "bytes32",
-        "snippet": "sha256(${1})${2}",
-        "type": "function"
-    },
-    "sha3": {
-        "description": "Computes the SHA3 hash of the (tightly packed) arguments",
-        "leftLabel": "bytes32",
-        "snippet": "sha3(${1})${2}",
-        "type": "function"
+        "type": "type"
     },
     
     "string": {
@@ -1103,43 +866,11 @@
         "type": "type"
     },
     
-    "suicide": {
-        "description": "Suicides the current contract, sending its funds to the given address",
-        "leftLabel": "void",
-        "snippet": "suicide(${1:addr})${2}",
-        "type": "function"
-    },
-    
     "szabo": {
         "description": "1 szabo == 1000000000000 wei",
         "leftLabel": "szabo",
         "text": "szabo",
         "type": "type"
-    },
-    
-    "this": {
-        "description": "The current contract - explicitly convertible to address",
-        "leftLabel": "?",
-        "text": "this",
-        "type": "variable"
-    },
-    
-    "tx": {
-        "description": "Access the current transaction's properties",
-        "text": "tx.",
-        "type": "variable"
-    },
-    "tx.gasprice": {
-        "description": "The gas price (in wei) of the transaction",
-        "leftLabel": "uint",
-        "text": "tx.gasprice",
-        "type": "property"
-    },
-    "tx.origin": {
-        "description": "The sender of the transaction",
-        "leftLabel": "address",
-        "text": "tx.origin",
-        "type": "property"
     },
     
     "uint": {
@@ -1343,9 +1074,9 @@
     
     "var": {
         "description": "Type determined at run-time",
-        "leftLabel": "?",
+        "leftLabel": "var",
         "text": "var",
-        "type": "keyword"
+        "type": "type"
     },
     
     "wei": {

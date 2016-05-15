@@ -1,0 +1,32 @@
+{
+    ".data": {
+        "description": "The data of the message",
+        "leftLabel": "bytes",
+        "text": ".data",
+        "type": "property"
+    },
+    ".gas": {
+        "description": "The amount of remaining gas",
+        "leftLabel": "uint",
+        "text": ".gas",
+        "type": "property"
+    },
+    ".sender": {
+        "description": "The address of the message sender",
+        "leftLabel": "address",
+        "text": ".sender",
+        "type": "property"
+    },
+    ".sig": {
+        "description": "The hash of the current function signature",
+        "leftLabel": "bytes4",
+        "text": ".sig",
+        "type": "property"
+    },
+    ".value": {
+        "description": "The amount (in wei) sent with the message",
+        "leftLabel": "uint",
+        "text": ".value",
+        "type": "property"
+    }
+}
