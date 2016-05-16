@@ -5,6 +5,7 @@
   "description": "Autocomplete+ provider for Solidity",
   "keywords": [
     "solidity",
+    "autocomplete-plus",
     "autocomplete",
     "ethereum",
     "ether"
