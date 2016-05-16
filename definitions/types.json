@@ -650,7 +650,7 @@
     
     "modifier": {
         "leftLabel": "modifier",
-        "text": "modifier",
+        "snippet": "modifier ${1:modifierName} {\n\t${2}\n}",
         "type": "type"
     },
     
@@ -862,7 +862,7 @@
     
     "struct": {
         "leftLabel": "struct",
-        "text": "struct",
+        "snippet": "struct ${1:structName} {\n\t${2}\n}",
         "type": "type"
     },
     
