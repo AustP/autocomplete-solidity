@@ -1,155 +1,163 @@
 {
-    "anonymous": {
-        "description": "Make the hash of the event signature not be added as a first topic",
-        "text": "anonymous",
-        "type": "keyword"
-    },
-
-    "block": {
-        "description": "Access the current block's properties",
-        "text": "block.",
-        "type": "variable"
-    },
-    
-    "constant": {
-        "text": "constant",
-        "type": "keyword"
+    "global": {
+        "contract": {
+            "leftLabel": "contract",
+            "snippet": "contract ${1:contractName} {\n\t${2}\n}",
+            "type": "keyword"
+        },
+        
+        "import": {
+            "description": "Imports a Solidity file",
+            "snippet": "import '${1}';${2}",
+            "type": "import"
+        }
     },
     
     "contract": {
-        "leftLabel": "contract",
-        "snippet": "contract ${1:contractName} {\n\t${2}\n}",
-        "type": "keyword"
-    },
-    
-    "delete": {
-        "description": "Use to delete structs",
-        "text": "delete",
-        "type": "keyword"
-    },
-    
-    "ecrecover": {
-        "description": "Recover the public key from an elliptic curve signature",
-        "leftLabel": "address",
-        "snippet": "ecrecover(${1:data}, ${2:v}, ${3:r}, ${4:s})${5}",
-        "type": "function"
-    },
-    
-    "external": {
-        "description": "Sets the visibility to contracts only",
-        "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
-        "text": "external",
-        "type": "keyword"
+        "anonymous": {
+            "description": "Make the hash of the event signature not be added as a first topic",
+            "text": "anonymous",
+            "type": "keyword"
+        },
+        
+        "constant": {
+            "text": "constant",
+            "type": "keyword"
+        },
+        
+        "external": {
+            "description": "Sets the visibility to contracts only",
+            "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
+            "text": "external",
+            "type": "keyword"
+        },
+        
+        "function": {
+            "snippet": "function ${1:functionName}(${2}) ${3}{\n\t${4}\n}",
+            "type": "keyword"
+        },
+        
+        "indexed": {
+            "description": "Cause the respective argument to be treated as a log topic instead of data",
+            "text": "indexed",
+            "type": "keyword"
+        },
+        
+        "inheritable": {
+            "description": "Sets the visibility to this contract / inherited contracts",
+            "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
+            "text": "inheritable",
+            "type": "keyword"
+        },
+        
+        "internal": {
+            "description": "Sets visibility so it can only be accessed from internally",
+            "text": "internal",
+            "type": "keyword"
+        },
+        
+        "private": {
+            "description": "Sets the visibility to this contract",
+            "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
+            "text": "private",
+            "type": "keyword"
+        },
+        
+        "public": {
+            "description": "Sets the visibility to anywhere (default)",
+            "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
+            "text": "public",
+            "type": "keyword"
+        },
+        
+        "returns": {
+            "snippet": "returns (${1}) ",
+            "type": "keyword"
+        }
     },
     
     "function": {
-        "snippet": "function ${1:functionName}(${2}) ${3}{\n\t${4}\n}",
-        "type": "keyword"
-    },
-    
-    "import": {
-        "description": "Imports a Solidity file",
-        "snippet": "import '${1}';${2}",
-        "type": "import"
-    },
-    
-    "indexed": {
-        "description": "Cause the respective argument to be treated as a log topic instead of data",
-        "text": "indexed",
-        "type": "keyword"
-    },
-    
-    "inheritable": {
-        "description": "Sets the visibility to this contract / inherited contracts",
-        "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
-        "text": "inheritable",
-        "type": "keyword"
-    },
-    
-    "internal": {
-        "description": "Sets visibility so it can only be accessed from internally",
-        "text": "internal",
-        "type": "keyword"
-    },
-    
-    "msg": {
-        "description": "Access the current message's properties",
-        "text": "msg.",
-        "type": "variable"
-    },
-    
-    "new": {
-        "description": "Create something new",
-        "leftLabel": "?",
-        "text": "new",
-        "type": "keyword"
-    },
-    
-    "now": {
-        "description": "Current block's timestamp (alias for block.timestamp)",
-        "leftLabel": "uint",
-        "text": "now",
-        "type": "variable"
-    },
-    
-    "private": {
-        "description": "Sets the visibility to this contract",
-        "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
-        "text": "private",
-        "type": "keyword"
-    },
-    "public": {
-        "description": "Sets the visibility to anywhere (default)",
-        "descriptionMoreURL": "https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1",
-        "text": "public",
-        "type": "keyword"
-    },
-    
-    "return": {
-        "snippet": "return ${1}",
-        "type": "keyword"
-    },
-    "returns": {
-        "snippet": "returns (${1}) ",
-        "type": "keyword"
-    },
-    
-    "ripemd160": {
-        "description": "Computes the RIPEMD-160 hash of the (tightly packed) arguments",
-        "leftLabel": "bytes20",
-        "snippet": "ripemd160(${1})${2}",
-        "type": "function"
-    },
-    "sha256": {
-        "description": "Computes the SHA256 hash of the (tightly packed) arguments",
-        "leftLabel": "bytes32",
-        "snippet": "sha256(${1})${2}",
-        "type": "function"
-    },
-    "sha3": {
-        "description": "Computes the SHA3 hash of the (tightly packed) arguments",
-        "leftLabel": "bytes32",
-        "snippet": "sha3(${1})${2}",
-        "type": "function"
-    },
-    
-    "suicide": {
-        "description": "Suicides the current contract, sending its funds to the given address",
-        "leftLabel": "void",
-        "snippet": "suicide(${1:addr})${2}",
-        "type": "function"
-    },
-    
-    "this": {
-        "description": "The current contract - explicitly convertible to address",
-        "leftLabel": "?",
-        "text": "this",
-        "type": "variable"
-    },
-    
-    "tx": {
-        "description": "Access the current transaction's properties",
-        "text": "tx.",
-        "type": "variable"
+        "block": {
+            "description": "Access the current block's properties",
+            "text": "block.",
+            "type": "variable"
+        },
+        
+        "constant": {
+            "text": "constant",
+            "type": "keyword"
+        },
+        
+        "delete": {
+            "description": "Use to delete structs",
+            "text": "delete",
+            "type": "keyword"
+        },
+        
+        "ecrecover": {
+            "description": "Recover the public key from an elliptic curve signature",
+            "leftLabel": "address",
+            "snippet": "ecrecover(${1:data}, ${2:v}, ${3:r}, ${4:s})${5}",
+            "type": "function"
+        },
+        
+        "msg": {
+            "description": "Access the current message's properties",
+            "text": "msg.",
+            "type": "variable"
+        },
+        
+        "now": {
+            "description": "Current block's timestamp (alias for block.timestamp)",
+            "leftLabel": "uint",
+            "text": "now",
+            "type": "variable"
+        },
+        
+        "return": {
+            "snippet": "return ${1}",
+            "type": "keyword"
+        },
+        
+        "ripemd160": {
+            "description": "Computes the RIPEMD-160 hash of the (tightly packed) arguments",
+            "leftLabel": "bytes20",
+            "snippet": "ripemd160(${1})${2}",
+            "type": "function"
+        },
+        
+        "sha256": {
+            "description": "Computes the SHA256 hash of the (tightly packed) arguments",
+            "leftLabel": "bytes32",
+            "snippet": "sha256(${1})${2}",
+            "type": "function"
+        },
+        
+        "sha3": {
+            "description": "Computes the SHA3 hash of the (tightly packed) arguments",
+            "leftLabel": "bytes32",
+            "snippet": "sha3(${1})${2}",
+            "type": "function"
+        },
+        
+        "suicide": {
+            "description": "Suicides the current contract, sending its funds to the given address",
+            "leftLabel": "void",
+            "snippet": "suicide(${1:addr})${2}",
+            "type": "function"
+        },
+        
+        "this": {
+            "description": "The current contract - explicitly convertible to address",
+            "leftLabel": "?",
+            "text": "this",
+            "type": "variable"
+        },
+        
+        "tx": {
+            "description": "Access the current transaction's properties",
+            "text": "tx.",
+            "type": "variable"
+        }
     }
 }
