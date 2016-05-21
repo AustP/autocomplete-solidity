@@ -1,4 +1,4 @@
-// courtesy of https://chriseth.github.io/browser-solidity/#version=soljson-latest.js
+// https://chriseth.github.io/browser-solidity/#version=soljson-latest.js
 
 contract Ballot {
 

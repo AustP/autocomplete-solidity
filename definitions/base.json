@@ -2,13 +2,13 @@
     "global": {
         "contract": {
             "leftLabel": "contract",
-            "snippet": "contract ${1:contractName} {\n\t${2}\n}",
+            "snippet": "contract ${1:SomeContract} {\n\t${2}\n}",
             "type": "keyword"
         },
         
         "import": {
             "description": "Imports a Solidity file",
-            "snippet": "import '${1}';${2}",
+            "snippet": "import '${1}'${2}",
             "type": "import"
         }
     },
@@ -33,7 +33,7 @@
         },
         
         "function": {
-            "snippet": "function ${1:functionName}(${2}) ${3}{\n\t${4}\n}",
+            "snippet": "function ${1:someFunction}(${2}) ${3}{\n\t${4}\n}",
             "type": "keyword"
         },
         
@@ -79,7 +79,7 @@
     "function": {
         "block": {
             "description": "Access the current block's properties",
-            "text": "block.",
+            "text": "block",
             "type": "variable"
         },
         
@@ -103,7 +103,7 @@
         
         "msg": {
             "description": "Access the current message's properties",
-            "text": "msg.",
+            "text": "msg",
             "type": "variable"
         },
         
@@ -156,7 +156,7 @@
         
         "tx": {
             "description": "Access the current transaction's properties",
-            "text": "tx.",
+            "text": "tx",
             "type": "variable"
         }
     }

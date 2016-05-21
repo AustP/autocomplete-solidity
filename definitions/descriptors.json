@@ -1,0 +1,29 @@
+{
+    "ether": {
+        "description": "1 ether == 1000000000000000000 wei",
+        "leftLabel": "ether",
+        "text": "ether",
+        "type": "descriptor"
+    },
+    
+    "finney": {
+        "description": "1 finey == 1000000000000000 wei",
+        "leftLabel": "finney",
+        "text": "finney",
+        "type": "descriptor"
+    },
+    
+    "szabo": {
+        "description": "1 szabo == 1000000000000 wei",
+        "leftLabel": "szabo",
+        "text": "szabo",
+        "type": "descriptor"
+    },
+    
+    "wei": {
+        "description": "1 wei == 1/1000000000000000000 ether",
+        "leftLabel": "wei",
+        "text": "wei",
+        "type": "descriptor"
+    }
+}

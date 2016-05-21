@@ -2,14 +2,10 @@
 /* jshint esversion: 6 */
 
 import AutocompleteSolidity from '../src/autocomplete-solidity';
-
-// Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
-//
-// To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
-// or `fdescribe`). Remove the `f` to unfocus the block.
+import parser from '../src/util/parser';
 
 describe('AutocompleteSolidity', () => {
-    let editor, provider;
+    let editor, providers;
     
     let getSuggestions = () => {
         let cursor = editor.getLastCursor();
@@ -17,158 +13,413 @@ describe('AutocompleteSolidity', () => {
         let end = cursor.getBufferPosition();
         let prefix = editor.getTextInRange([start, end]);
             
-        return provider.getSuggestions({
-            editor: editor,
-            bufferPosition: end,
-            prefix: prefix
-        });
+        return providers[0].getSuggestions({
+                editor: editor,
+                bufferPosition: end,
+                prefix: prefix
+            })
+            .concat(
+                providers[1].getSuggestions({
+                    editor: editor,
+                    bufferPosition: end,
+                    prefix: prefix
+                })
+            );
+    };
+    
+    let setText = (x, y, text) => {
+        editor.setTextInBufferRange([[x, y], [x, Infinity]], text);
+        editor.setCursorBufferPosition([x, y + text.length]);
+        parser.parse(editor);
     };
     
     beforeEach(() => {
+        atom.project.setPaths([__dirname]);
+        
+        waitsForPromise(() => atom.workspace.open('files/test.sol'));
         waitsForPromise(() => atom.packages.activatePackage('autocomplete-solidity'));
-        waitsForPromise(() => atom.workspace.open('test.sol'));
         
         runs(() => {
-            provider = AutocompleteSolidity.provide();
+            providers = AutocompleteSolidity.provide();
             editor = atom.workspace.getActiveTextEditor();
         });
     });
     
-    it('autocompletes contracts', () => {
-        editor.setText(`cont`);
-        editor.setCursorBufferPosition([0, 4]);
+    it('autocompletes contracts / imports', () => {
+        setText(1, 0, 'cont');
         
-        let suggestions = getSuggestions();
-        expect(suggestions.length).toBe(1);
-        
-        let suggestion = suggestions[0];
-        expect(suggestion.type).toBe('keyword');
-        expect(suggestion.snippet).toBe('contract ${1:contractName} {\n\t${2}\n}');
-    });
-    
-    it('autocompletes functions', () => {
-        editor.setText(`func`);
-        editor.setCursorBufferPosition([0, 4]);
-        
-        let suggestions = getSuggestions();
-        expect(suggestions.length).toBe(1);
-        
-        let suggestion = suggestions[0];
-        expect(suggestion.type).toBe('keyword');
-        expect(suggestion.snippet).toBe('function ${1:functionName}(${2}) ${3}{\n\t${4}\n}');
-    });
-    
-    it('autocompletes structs', () => {
-        editor.setText(`stru`);
-        editor.setCursorBufferPosition([0, 4]);
-        
-        let suggestions = getSuggestions();
-        expect(suggestions.length).toBe(1);
-        
-        let suggestion = suggestions[0];
-        expect(suggestion.type).toBe('type');
-        expect(suggestion.text).toBe('struct');
-    });
-    
-    it('autocompletes enums', () => {
-        editor.setText(`en`);
-        editor.setCursorBufferPosition([0, 2]);
-        
-        let suggestions = getSuggestions();
-        expect(suggestions.length).toBe(1);
-        
-        let suggestion = suggestions[0];
-        expect(suggestion.type).toBe('type');
-        expect(suggestion.text).toBe('enum');
-    });
-    
-    it('autocompletes modifiers', () => {
-        editor.setText(`mod`);
-        editor.setCursorBufferPosition([0, 2]);
-        
-        let suggestions = getSuggestions();
-        expect(suggestions.length).toBe(1);
-        
-        let suggestion = suggestions[0];
-        expect(suggestion.type).toBe('type');
-        expect(suggestion.text).toBe('modifier');
-    });
-    
-    describe('file parsing', () => {
-        let editor, provider;
-    
-        let getSuggestions = () => {
-            let cursor = editor.getLastCursor();
-            let start = cursor.getBeginningOfCurrentWordBufferPosition();
-            let end = cursor.getBufferPosition();
-            let prefix = editor.getTextInRange([start, end]);
-                
-            return provider.getSuggestions({
-                editor: editor,
-                bufferPosition: end,
-                prefix: prefix
-            });
-        };
-        
-        beforeEach(() => {
-            atom.project.setPaths([__dirname]);
-            
-            waitsForPromise(() => atom.workspace.open('test.sol'));
-            waitsForPromise(() => atom.packages.activatePackage('autocomplete-solidity'));
-            
-            runs(() => {
-                provider = AutocompleteSolidity.provide();
-                editor = atom.workspace.getActiveTextEditor();
-            });
+        let suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'contract',
+            snippet: 'contract ${1:SomeContract} {\n\t${2}\n}',
+            type: 'keyword',
+            replacementPrefix: 'cont',
+            rightLabel: 'keyword'
         });
         
-        it('reads contracts', () => {
-            editor.setText(editor.getText() + 'Bal');
-            editor.setCursorBufferPosition([66, 3]);
-            
-            let suggestions = getSuggestions();
-            expect(suggestions.length).toBe(1);
-            
-            let suggestion = suggestions[0];
-            expect(suggestion.type).toBe('contract');
-            expect(suggestion.snippet).toBe('Ballot');
+        setText(1, 0, 'impo');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Imports a Solidity file',
+            snippet: 'import \'${1}\'${2}',
+            type: 'import',
+            replacementPrefix: 'impo',
+            rightLabel: 'import'
+        });
+    });
+    
+    it('autocompletes types', () => {
+        setText(5, 4, 'add');
+        
+        let suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Address',
+            leftLabel: 'address',
+            replacementPrefix: 'add',
+            rightLabel: 'type',
+            text: 'address',
+            type: 'type'
         });
         
-        it('reads functions', () => {
-            editor.setText(editor.getText() + 'this.w');
-            editor.setCursorBufferPosition([66, 6]);
-            
-            let suggestions = getSuggestions();
-            expect(suggestions.length).toBe(1);
-            
-            let suggestion = suggestions[0];
-            expect(suggestion.type).toBe('method');
-            expect(suggestion.snippet).toBe('winningProposal(${1})${2}');
+        setText(5, 4, 'bo');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Boolean',
+            leftLabel: 'bool',
+            replacementPrefix: 'bo',
+            rightLabel: 'type',
+            text: 'bool',
+            type: 'type'
         });
         
-        it('reads structs', () => {
-            editor.setText(editor.getText() + 'Vo');
-            editor.setCursorBufferPosition([66, 2]);
-            
-            let suggestions = getSuggestions();
-            expect(suggestions.length).toBe(1);
-            
-            let suggestion = suggestions[0];
-            expect(suggestion.type).toBe('struct');
-            expect(suggestion.snippet).toBe('Voter');
+        setText(5, 4, 'by');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: '1 byte',
+            leftLabel: 'byte',
+            replacementPrefix: 'by',
+            rightLabel: 'type',
+            text: 'byte',
+            type: 'type'
         });
         
-        it('reads variables', () => {
-            editor.setText(editor.getText() + 'se');
-            editor.setCursorBufferPosition([66, 2]);
-            
-            let suggestions = getSuggestions();
-            // sender gets set twice, so it gets suggested twice
-            expect(suggestions.length).toBe(2);
-            
-            let suggestion = suggestions[0];
-            expect(suggestion.leftLabel).toBe('Voter');
-            expect(suggestion.text).toBe('sender');
+        setText(5, 4, 'by');
+        
+        suggestion = getSuggestions()[1];
+        expect(suggestion)
+        .toEqual({
+            description: 'Dynamically-sized byte array',
+            leftLabel: 'bytes',
+            replacementPrefix: 'by',
+            rightLabel: 'type',
+            text: 'bytes',
+            type: 'type'
         });
+    });
+    
+    it('autocompletes variables and parameters', () => {
+        setText(33, 8, 'ow');
+        
+        let suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'address',
+            text: 'owner',
+            type: 'variable',
+            replacementPrefix: 'ow',
+            rightLabel: 'variable'
+        });
+        
+        setText(33, 8, 'owner = _o');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'address',
+            text: '_owner',
+            type: 'parameter',
+            replacementPrefix: '_o',
+            rightLabel: 'parameter'
+        });
+        
+        setText(33, 8, 'am');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'uint',
+            text: 'amount',
+            type: 'variable',
+            replacementPrefix: 'am',
+            rightLabel: 'variable'
+        });
+        
+        setText(33, 8, 'amount = _a');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'uint',
+            text: '_amount',
+            type: 'parameter',
+            replacementPrefix: '_a',
+            rightLabel: 'parameter'
+        });
+    });
+    
+    it('autocompletes functions / events', () => {
+        setText(36, 8, 'an');
+        
+        let suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Calls the anotherFunction function',
+            leftLabel: 'void',
+            replacementPrefix: 'an',
+            rightLabel: 'function',
+            snippet: 'anotherFunction()${1}',
+            type: 'function'
+        });
+        
+        setText(36, 8, 'this.');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Calls the anotherFunction function',
+            leftLabel: 'void',
+            replacementPrefix: '',
+            rightLabel: 'function',
+            snippet: 'anotherFunction${1}()${2}',
+            type: 'function'
+        });
+        
+        setText(36, 8, 'So');
+        
+        suggestion = getSuggestions()[2];
+        expect(suggestion)
+        .toEqual({
+            description: 'Emits the SomeEvent event',
+            leftLabel: 'void',
+            replacementPrefix: 'So',
+            rightLabel: 'event',
+            snippet: 'SomeEvent(${1:addr})${2}',
+            type: 'event'
+        });
+    });
+    
+    it('autocompletes structs / enums', () => {
+        setText(39, 8, 'myStruct.a');
+        
+        let suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'address',
+            text: 'addr',
+            type: 'struct',
+            replacementPrefix: 'a',
+            rightLabel: 'struct'
+        });
+        
+        setText(39, 8, 'myStruct.s');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'SomeEnum',
+            text: 'someEnum',
+            type: 'struct',
+            replacementPrefix: 's',
+            rightLabel: 'struct'
+        });
+        
+        setText(39, 8, 'myStruct.someEnum = SomeEnum.O');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            text: 'One',
+            type: 'enum',
+            replacementPrefix: 'O',
+            rightLabel: 'enum'
+        });
+        
+        setText(39, 8, 'myStruct.someEnum = SomeEnum.T');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            text: 'Two',
+            type: 'enum',
+            replacementPrefix: 'T',
+            rightLabel: 'enum'
+        });
+    });
+    
+    it('autocompletes enums / events / functions / modifiers', () => {
+        setText(47, 4, 'en');
+        
+        let suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'enum',
+            snippet: 'enum ${1:SomeEnum} {\n\t${2}\n}',
+            type: 'type',
+            replacementPrefix: 'en',
+            rightLabel: 'type'
+        });
+        
+        setText(47, 4, 'ev');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'event',
+            snippet: 'event ${1:SomeEvent}(${2})${3}',
+            type: 'type',
+            replacementPrefix: 'ev',
+            rightLabel: 'type'
+        });
+        
+        setText(47, 4, 'fu');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            snippet: 'function ${1:someFunction}(${2}) ${3}{\n\t${4}\n}',
+            type: 'keyword',
+            replacementPrefix: 'fu',
+            rightLabel: 'keyword'
+        });
+        
+        setText(47, 4, 'function testFunction() on');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Applies the onlyowner modifier',
+            snippet: 'onlyowner()${1}',
+            type: 'modifier',
+            replacementPrefix: 'on',
+            rightLabel: 'modifier'
+        });
+        
+        setText(47, 4, 'function testFunction() pu');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Sets the visibility to anywhere (default)',
+            descriptionMoreURL: 'https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1',
+            replacementPrefix: 'pu',
+            rightLabel: 'keyword',
+            text: 'public',
+            type: 'keyword'
+        });
+        
+        setText(47, 4, 'function testFunction() ex');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Sets the visibility to contracts only',
+            descriptionMoreURL: 'https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1',
+            replacementPrefix: 'ex',
+            rightLabel: 'keyword',
+            text: 'external',
+            type: 'keyword'
+        });
+        
+        setText(47, 4, 'function testFunction() int');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Sets visibility so it can only be accessed from internally',
+            text: 'internal',
+            type: 'keyword',
+            replacementPrefix: 'int',
+            rightLabel: 'keyword'
+        });
+        
+        setText(47, 4, 'function testFunction() pr');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Sets the visibility to this contract',
+            descriptionMoreURL: 'https://github.com/ethereum/wiki/wiki/Solidity-Features#visibility-specifiers-1',
+            replacementPrefix: 'pr',
+            rightLabel: 'keyword',
+            text: 'private',
+            type: 'keyword'
+        });
+        
+        setText(47, 4, 'function testFunction() re');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            snippet: 'returns (${1}) ',
+            type: 'keyword',
+            replacementPrefix: 're',
+            rightLabel: 'keyword'
+        });
+        
+        setText(47, 4, 'mo');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'modifier',
+            snippet: 'modifier ${1:someModifier}(${2}) {\n\t${3}\n}',
+            type: 'type',
+            replacementPrefix: 'mo',
+            rightLabel: 'type'
+        });
+    });
+    
+    it('understands global context', () => {
+        setText(1, 0, 'funct');
+        
+        let suggestions = getSuggestions();
+        expect(suggestions.length).toBe(0);
+    });
+    
+    it('understands contract context', () => {
+        setText(5, 4, 'cont');
+        
+        let suggestions = getSuggestions();
+        expect(suggestions.length).toBe(0);
+    });
+    
+    it('understands function context', () => {
+        setText(33, 8, 'enu');
+        
+        let suggestions = getSuggestions();
+        expect(suggestions.length).toBe(0);
+        
+        setText(33, 8, 'even');
+        
+        suggestions = getSuggestions();
+        expect(suggestions.length).toBe(0);
+        
+        setText(33, 8, 'modifi');
+        
+        suggestions = getSuggestions();
+        expect(suggestions.length).toBe(0);
+        
+        setText(33, 8, 'struc');
+        
+        suggestions = getSuggestions();
+        expect(suggestions.length).toBe(0);
     });
 });
