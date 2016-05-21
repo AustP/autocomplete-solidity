@@ -22,16 +22,9 @@ export default class Provider {
         });
     }
     
-    getStructure(editor) {
-        this.structure = parser.getStructure(editor);
-        this.context = this.structure.context;
-    }
-    
     getPrefix(editor) {
         let bufferPosition = editor.getLastCursor().getBufferPosition();
         let line = editor.getTextInRange([[bufferPosition.row, 0], bufferPosition]);
-        
-        let old_prefix = this.prefix;
         
         let split = line.split(/\s+/g);
         this.prefix = split.pop();
@@ -45,6 +38,11 @@ export default class Provider {
             let split = this.prefix.split(/[\[\]]/);
             this.prefix = split[split.length - 1];
         }
+    }
+    
+    getStructure(editor) {
+        this.structure = parser.getStructure(editor);
+        this.context = this.structure.context;
     }
     
     getSuggestions(options) {

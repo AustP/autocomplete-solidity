@@ -104,9 +104,9 @@ class TypeProvider extends Provider {
         // add types to definitions
         Object.assign(definitions, types);
         
-        let variables = contract.getVariableDefinitions();
-        
         if (this.context.level == 'function' || this.context.level == 'modifier') {
+            let variables = contract.getVariableDefinitions();
+        
             // add variables to definitions
             Object.assign(definitions, variables);
         
