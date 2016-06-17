@@ -322,25 +322,27 @@ let parse = (editor) => {
                     let function_params = modifiers.function_params.replace(/\s+/g, ' ').split(/[\(\)]/);
                     function_params.shift();
                     
-                    let params = function_params.shift().split(',');
-                    for (let param of params) {
-                        let info = param.trim().split(' ');
-                        let type = info[0];
-                        let name = info[1];
-                        
-                        if (name && context_name && context == 'function') {
-                            structure.contracts[contract].functions[context_name].params.push({
-                                name: name,
-                                type: type
-                            });
+                    if (function_params.length) {
+                        let params = function_params.shift().split(',');
+                        for (let param of params) {
+                            let info = param.trim().split(' ');
+                            let type = info[0];
+                            let name = info[1];
+                            
+                            if (name && context_name && context == 'function') {
+                                structure.contracts[contract].functions[context_name].params.push({
+                                    name: name,
+                                    type: type
+                                });
+                            }
                         }
-                    }
-                    
-                    if (function_params.length == 3) {
-                        function_params.shift();
                         
-                        if (context_name && context == 'function') {
-                            structure.contracts[contract].functions[context_name].returns = function_params.shift().trim();
+                        if (function_params.length == 3) {
+                            function_params.shift();
+                            
+                            if (context_name && context == 'function') {
+                                structure.contracts[contract].functions[context_name].returns = function_params.shift().trim();
+                            }
                         }
                     }
                     
@@ -409,6 +411,20 @@ let parse = (editor) => {
                     context = 'global';
                     context_name = '';
                     contract = '';
+                    
+                    modifiers.contract = false;
+                    modifiers.enum = false;
+                    modifiers.event = false;
+                    modifiers.function = false;
+                    modifiers.modifier = false;
+                    modifiers.struct = false;
+                    
+                    modifiers.contract_extends = false;
+                    modifiers.event_params = false;
+                    modifiers.function_params = false;
+                    modifiers.modifier_params = false;
+                    modifiers.struct_properties = false;
+                    modifiers.mapping = false;
                 }
             }
             
