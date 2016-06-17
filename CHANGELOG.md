@@ -1,3 +1,7 @@
+### 0.3.0 - Jun 16, 2016
+* Added library support
+* Fixed some errors that would occur when coding in unique situations
+
 ### 0.2.0 - May 20, 2016
 * Added parser
 * Added contextual suggestions
