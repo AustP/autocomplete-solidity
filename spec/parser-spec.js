@@ -12,6 +12,7 @@ describe('AutocompleteSolidity Parser', () => {
         waitsForPromise(() => atom.workspace.open('files/ballot.sol'));
         waitsForPromise(() => atom.workspace.open('files/bank.sol'));
         waitsForPromise(() => atom.workspace.open('files/pyramid.sol'));
+        waitsForPromise(() => atom.workspace.open('files/StringLib.sol'));
         waitsForPromise(() => atom.packages.activatePackage('autocomplete-solidity'));
         
         runs(() => {
@@ -20,6 +21,7 @@ describe('AutocompleteSolidity Parser', () => {
             parser.parse(editors[0]);
             parser.parse(editors[1]);
             parser.parse(editors[2]);
+            parser.parse(editors[3]);
         });
     });
         
@@ -32,6 +34,21 @@ describe('AutocompleteSolidity Parser', () => {
             'Bank', 'BankDb', 'ContractProvider', 'Doug', 'DougEnabled',
             'FundManager', 'FundManagerEnabled', 'Permissions', 'PermissionsDb'
         ]);
+    });
+        
+    it('parses libraries', () => {
+        let editor = editors[3];
+        let structure = parser.getStructure(editor);
+        
+        for (let contract in structure.contracts) {
+            let info = structure.contracts[contract];
+            
+            if (contract == 'StringLib' || contract == 'StringUtils') {
+                expect(info.library).toBe(true);
+            } else {
+                expect(info.library).toBe(false);
+            }
+        }
     });
     
     it('parses enums', () => {

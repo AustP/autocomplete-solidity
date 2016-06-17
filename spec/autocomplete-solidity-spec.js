@@ -5,47 +5,51 @@ import AutocompleteSolidity from '../src/autocomplete-solidity';
 import parser from '../src/util/parser';
 
 describe('AutocompleteSolidity', () => {
-    let editor, providers;
+    let editor, lib_editor, providers;
     
-    let getSuggestions = () => {
-        let cursor = editor.getLastCursor();
+    let getSuggestions = (_editor = editor) => {
+        let cursor = _editor.getLastCursor();
         let start = cursor.getBeginningOfCurrentWordBufferPosition();
         let end = cursor.getBufferPosition();
-        let prefix = editor.getTextInRange([start, end]);
+        let prefix = _editor.getTextInRange([start, end]);
             
         return providers[0].getSuggestions({
-                editor: editor,
+                editor: _editor,
                 bufferPosition: end,
                 prefix: prefix
             })
             .concat(
                 providers[1].getSuggestions({
-                    editor: editor,
+                    editor: _editor,
                     bufferPosition: end,
                     prefix: prefix
                 })
             );
     };
     
-    let setText = (x, y, text) => {
-        editor.setTextInBufferRange([[x, y], [x, Infinity]], text);
-        editor.setCursorBufferPosition([x, y + text.length]);
-        parser.parse(editor);
+    let setText = (x, y, text, _editor = editor) => {
+        _editor.setTextInBufferRange([[x, y], [x, Infinity]], text);
+        _editor.setCursorBufferPosition([x, y + text.length]);
+        parser.parse(_editor);
     };
     
     beforeEach(() => {
         atom.project.setPaths([__dirname]);
         
         waitsForPromise(() => atom.workspace.open('files/test.sol'));
+        waitsForPromise(() => atom.workspace.open('files/StringLib.sol'));
         waitsForPromise(() => atom.packages.activatePackage('autocomplete-solidity'));
         
         runs(() => {
             providers = AutocompleteSolidity.provide();
-            editor = atom.workspace.getActiveTextEditor();
+            
+            let editors = atom.workspace.getTextEditors();
+            editor = editors[0];
+            lib_editor = editors[1];
         });
     });
     
-    it('autocompletes contracts / imports', () => {
+    it('autocompletes contracts', () => {
         setText(1, 0, 'cont');
         
         let suggestion = getSuggestions()[0];
@@ -58,9 +62,36 @@ describe('AutocompleteSolidity', () => {
             rightLabel: 'keyword'
         });
         
-        setText(1, 0, 'impo');
+        setText(53, 8, 'TestContract(0x0).o');
         
         suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'address',
+            replacementPrefix: 'o',
+            rightLabel: 'variable',
+            text: 'owner',
+            type: 'variable'
+        });
+        
+        setText(53, 8, 'TestContract(0x0).T');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Calls the TestContract function',
+            leftLabel: 'void',
+            replacementPrefix: 'T',
+            rightLabel: 'function',
+            snippet: 'TestContract${1}(${2:_owner}, ${3:_amount})${4}',
+            type: 'function'
+        });
+    });
+    
+    it('autocompletes imports', () => {
+        setText(1, 0, 'impo');
+        
+        let suggestion = getSuggestions()[0];
         expect(suggestion)
         .toEqual({
             description: 'Imports a Solidity file',
@@ -68,6 +99,59 @@ describe('AutocompleteSolidity', () => {
             type: 'import',
             replacementPrefix: 'impo',
             rightLabel: 'import'
+        });
+    });
+    
+    it('autocompletes libraries', () => {
+        setText(1, 0, 'libr');
+        
+        let suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'library',
+            replacementPrefix: 'libr',
+            rightLabel: 'keyword',
+            snippet: 'library ${1:SomeLibrary} {\n\t${2}\n}',
+            type: 'keyword'
+        });
+        
+        setText(67, 8, 'StringUt', lib_editor);
+        
+        suggestion = getSuggestions(lib_editor)[0];
+        expect(suggestion)
+        .toEqual({
+            leftLabel: 'library',
+            functions: {
+                uintToBytes: {
+                    description: 'Calls the uintToBytes function',
+                    leftLabel: 'bytes32 ret',
+                    snippet: 'uintToBytes(${1:v})${2}',
+                    type: 'function'
+                },
+                bytesToUInt: {
+                    description: 'Calls the bytesToUInt function',
+                    leftLabel: 'uint ret',
+                    snippet: 'bytesToUInt(${1:v})${2}',
+                    type: 'function'
+                }
+            },
+            text: 'StringUtils',
+            type: 'type',
+            replacementPrefix: 'StringUt',
+            rightLabel: 'type'
+        });
+        
+        setText(67, 8, 'StringUtils.u', lib_editor);
+        
+        suggestion = getSuggestions(lib_editor)[0];
+        expect(suggestion)
+        .toEqual({
+            description: 'Calls the uintToBytes function',
+            leftLabel: 'bytes32 ret',
+            snippet: 'uintToBytes(${1:v})${2}',
+            replacementPrefix: 'u',
+            rightLabel: 'function',
+            type: 'function'
         });
     });
     
@@ -204,7 +288,7 @@ describe('AutocompleteSolidity', () => {
         
         setText(36, 8, 'So');
         
-        suggestion = getSuggestions()[2];
+        suggestion = getSuggestions()[3];
         expect(suggestion)
         .toEqual({
             description: 'Emits the SomeEvent event',

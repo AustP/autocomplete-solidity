@@ -1,7 +1,7 @@
 // test new contract / import here (1, 0)
 
 
-contract testContract {
+contract TestContract {
     // test types here (5, 4)
     
     
@@ -29,7 +29,7 @@ contract testContract {
     }
     SomeStruct myStruct;
     
-    function testContract(address _owner, uint _amount) {
+    function TestContract(address _owner, uint _amount) {
         // test variable / parameter autocompletion here (33, 8)
         
         
@@ -46,4 +46,11 @@ contract testContract {
     
     // test enum / event / function / modifier snippets here (47, 4)
     
+}
+
+contract SomeContract {
+    function someFunction() {
+        // test autocompletions of contracts here (53, 8)
+        
+    }
 }
