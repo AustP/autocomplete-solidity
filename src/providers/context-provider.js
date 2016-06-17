@@ -132,7 +132,7 @@ class TypeProvider extends Provider {
                     let contract_name = split.pop().split('(')[0];
                     let contract = contracts.load(this.structure, contract_name);
                     
-                    return Object.assign({}, contract.getFunctionDefinitions(true), contract.getVariableDefinitions());
+                    return Object.assign({}, contract.getFunctionDefinitions(true), contract.getVariableDefinitions(false));
                 }
                 
                 let name = split.splice(-2, 1)[0];

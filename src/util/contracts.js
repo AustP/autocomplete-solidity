@@ -165,7 +165,7 @@ class Contract {
         return definitions;
     }
     
-    getVariableDefinitions() {
+    getVariableDefinitions(include_params = true) {
         let definitions = {};
         
         for (let name in this.variables) {
@@ -181,12 +181,14 @@ class Contract {
             let obj = this[type][this.context.name];
             
             if (obj) {
-                for (let param of obj.params) {
-                    definitions[param.name] = {
-                        leftLabel: param.type,
-                        text: param.name,
-                        type: 'parameter'
-                    };
+                if (include_params) {
+                    for (let param of obj.params) {
+                        definitions[param.name] = {
+                            leftLabel: param.type,
+                            text: param.name,
+                            type: 'parameter'
+                        };
+                    }
                 }
                 
                 for (let name in obj.variables) {
