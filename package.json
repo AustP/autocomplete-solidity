@@ -1,7 +1,7 @@
 {
   "name": "autocomplete-solidity",
   "main": "./src/autocomplete-solidity",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Autocomplete+ provider for Solidity",
   "keywords": [
     "solidity",
