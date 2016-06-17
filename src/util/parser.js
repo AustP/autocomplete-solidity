@@ -33,6 +33,7 @@ let parse = (editor) => {
         event_params: false,
         function: false,
         function_params: false,
+        library: false,
         mapping: false,
         modifier: false,
         modifier_params: false,
@@ -150,6 +151,10 @@ let parse = (editor) => {
             if (prev == 'contract') {
                 next_context = 'contract';
                 modifiers.contract = true;
+            } else if (prev == 'library') {
+                next_context = 'contract';
+                modifiers.contract = true;
+                modifiers.library = true;
             } else if (modifiers.contract) {
                 modifiers.contract = false;
                 
@@ -160,10 +165,13 @@ let parse = (editor) => {
                     events: {},
                     extends: [],
                     functions: {},
+                    library: modifiers.library,
                     modifiers: {},
                     structs: {},
                     variables: {}
                 };
+                
+                modifiers.library = false;
                 
                 contracts.push(contract);
                 contract_types[contract] = [];

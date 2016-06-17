@@ -10,6 +10,12 @@
             "description": "Imports a Solidity file",
             "snippet": "import '${1}'${2}",
             "type": "import"
+        },
+        
+        "library": {
+            "leftLabel": "library",
+            "snippet": "library ${1:SomeLibrary} {\n\t${2}\n}",
+            "type": "keyword"
         }
     },
     

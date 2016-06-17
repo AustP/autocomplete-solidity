@@ -141,15 +141,21 @@ class TypeProvider extends Provider {
                 if (type) {
                     this.prefix = split.pop();
                     
-                    let property_definitions = {};
-                    for (let property of type.properties) {
-                        property_definitions[property] = {
-                            text: property,
-                            type: 'enum'
-                        };
+                    if (type.properties) {
+                        let property_definitions = {};
+                        for (let property of type.properties) {
+                            property_definitions[property] = {
+                                text: property,
+                                type: 'enum'
+                            };
+                        }
+                        
+                        return property_definitions;
+                    } else if (type.functions) {
+                        return type.functions;
+                    } else {
+                        return {};
                     }
-                    
-                    return property_definitions;
                 }
                 
                 if (name == 'coinbase' && split.splice(-2, 1)[0] == 'block') {

@@ -94,7 +94,6 @@ class Contract {
     getModifierDefinitions() {
         let definitions = {};
         
-        
         if (this.context.level == 'contract') {
             for (let name in this.modifiers) {
                 definitions[name] = {
@@ -136,11 +135,31 @@ class Contract {
                 continue;
             }
             
-            definitions[contract] = {
-                leftLabel: 'contract',
-                text: contract,
-                type: 'type'
-            };
+            let info = this.contracts[contract];
+            if (info.library) {
+                let functions = {};
+                for (let name in info.functions) {
+                    functions[name] = {
+                        description: `Calls the ${name} function`,
+                        leftLabel: info.functions[name].returns,
+                        snippet: this.createFunctionSnippet(name, info.functions[name].params),
+                        type: 'function'
+                    };
+                }
+                
+                definitions[contract] = {
+                    leftLabel: 'library',
+                    functions: functions,
+                    text: contract,
+                    type: 'type'
+                };
+            } else {
+                definitions[contract] = {
+                    leftLabel: 'contract',
+                    text: contract,
+                    type: 'type'
+                };
+            }
         }
         
         return definitions;
