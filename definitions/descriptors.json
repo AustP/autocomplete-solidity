@@ -1,4 +1,11 @@
 {
+    "days": {
+        "description": "1 day == 86400 seconds",
+        "leftLabel": "day",
+        "text": "days",
+        "type": "descriptor"
+    },
+
     "ether": {
         "description": "1 ether == 1000000000000000000 wei",
         "leftLabel": "ether",
@@ -13,6 +20,27 @@
         "type": "descriptor"
     },
     
+    "hours": {
+        "description": "1 hour == 3600 seconds",
+        "leftLabel": "hour",
+        "text": "hours",
+        "type": "descriptor"
+    },
+    
+    "minutes": {
+        "description": "1 minute == 60 seconds",
+        "leftLabel": "minute",
+        "text": "minutes",
+        "type": "descriptor"
+    },
+    
+    "seconds": {
+        "description": "1 second",
+        "leftLabel": "second",
+        "text": "seconds",
+        "type": "descriptor"
+    },
+    
     "szabo": {
         "description": "1 szabo == 1000000000000 wei",
         "leftLabel": "szabo",
@@ -20,10 +48,24 @@
         "type": "descriptor"
     },
     
+    "weeks": {
+        "description": "1 week == 604800 seconds",
+        "leftLabel": "week",
+        "text": "weeks",
+        "type": "descriptor"
+    },
+    
     "wei": {
         "description": "1 wei == 1/1000000000000000000 ether",
         "leftLabel": "wei",
         "text": "wei",
+        "type": "descriptor"
+    },
+    
+    "years": {
+        "description": "1 year == 31449600 seconds",
+        "leftLabel": "year",
+        "text": "years",
         "type": "descriptor"
     }
 }
