@@ -1,3 +1,6 @@
+### 0.3.1 - Jun 22, 2016
+* Added time descriptors
+
 ### 0.3.0 - Jun 16, 2016
 * Added library support
 * Fixed some errors that would occur when coding in unique situations
