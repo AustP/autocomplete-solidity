@@ -95,7 +95,7 @@ describe('AutocompleteSolidity', () => {
         expect(suggestion)
         .toEqual({
             description: 'Imports a Solidity file',
-            snippet: 'import \'${1}\'${2}',
+            snippet: 'import "${1}"${2}',
             type: 'import',
             replacementPrefix: 'impo',
             rightLabel: 'import'
