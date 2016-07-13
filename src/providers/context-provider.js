@@ -141,8 +141,9 @@ class TypeProvider extends Provider {
                 if (type) {
                     this.prefix = split.pop();
                     
-                    if (type.properties) {
+                    if (type.properties && Array.isArray(type.properties)) {
                         let property_definitions = {};
+                        
                         for (let property of type.properties) {
                             property_definitions[property] = {
                                 text: property,

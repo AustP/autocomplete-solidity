@@ -346,6 +346,12 @@ describe('AutocompleteSolidity', () => {
             replacementPrefix: 'T',
             rightLabel: 'enum'
         });
+        
+        setText(39, 8, 'SomeStruct.');
+        
+        suggestion = getSuggestions()[0];
+        expect(suggestion)
+        .toEqual(undefined);
     });
     
     it('autocompletes enums / events / functions / modifiers', () => {
