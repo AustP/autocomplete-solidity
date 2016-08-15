@@ -185,17 +185,19 @@ let parse = (editor) => {
                 next_context = 'enum';
                 modifiers.enum = true;
             } else if (modifiers.enum) {
-                modifiers.enum = false;
-                
-                context_name = prev;
-                prev = '';
-                structure.contracts[contract].enums[context_name] = {
-                    properties: []
-                };
-                
-                contract_types[contract].push(context_name);
-                
-                modifiers.enum_properties = char;
+                if (structure.contracts[contract]) {
+                    modifiers.enum = false;
+                    
+                    context_name = prev;
+                    prev = '';
+                    structure.contracts[contract].enums[context_name] = {
+                        properties: []
+                    };
+                    
+                    contract_types[contract].push(context_name);
+                    
+                    modifiers.enum_properties = char;
+                }
             } else if (modifiers.enum_properties) {
                 modifiers.enum_properties += char;
             }
@@ -203,15 +205,17 @@ let parse = (editor) => {
             if (prev == 'event') {
                 modifiers.event = true;
             } else if (modifiers.event) {
-                modifiers.event = false;
-                
-                context_name = prev;
-                prev = '';
-                structure.contracts[contract].events[context_name] = {
-                    params: []
-                };
-                
-                modifiers.event_params = char;
+                if (structure.contracts[contract]) {
+                    modifiers.event = false;
+                    
+                    context_name = prev;
+                    prev = '';
+                    structure.contracts[contract].events[context_name] = {
+                        params: []
+                    };
+                    
+                    modifiers.event_params = char;
+                }
             } else if (modifiers.event_params) {
                 modifiers.event_params += char;
             }
@@ -220,23 +224,25 @@ let parse = (editor) => {
                 next_context = 'function';
                 modifiers.function = true;
             } else if (modifiers.function || prev == 'function') {
-                modifiers.function = false;
-                
-                // fallback function
-                if (prev == 'function' && char == '(') {
-                    next_context = 'function';
+                if (structure.contracts[contract]) {
+                    modifiers.function = false;
+                    
+                    // fallback function
+                    if (prev == 'function' && char == '(') {
+                        next_context = 'function';
+                        prev = '';
+                    }
+                    
+                    context_name = prev;
                     prev = '';
+                    structure.contracts[contract].functions[context_name] = {
+                        returns: 'void',
+                        params: [],
+                        variables: {}
+                    };
+                    
+                    modifiers.function_params = char;
                 }
-                
-                context_name = prev;
-                prev = '';
-                structure.contracts[contract].functions[context_name] = {
-                    returns: 'void',
-                    params: [],
-                    variables: {}
-                };
-                
-                modifiers.function_params = char;
             } else if (modifiers.function_params) {
                 modifiers.function_params += char;
             }
@@ -245,16 +251,18 @@ let parse = (editor) => {
                 next_context = 'modifier';
                 modifiers.modifier = true;
             } else if (modifiers.modifier) {
-                modifiers.modifier = false;
-                
-                context_name = prev;
-                prev = '';
-                structure.contracts[contract].modifiers[context_name] = {
-                    params: [],
-                    variables: {}
-                };
-                
-                modifiers.modifier_params = char;
+                if (structure.contracts[contract]) {
+                    modifiers.modifier = false;
+                    
+                    context_name = prev;
+                    prev = '';
+                    structure.contracts[contract].modifiers[context_name] = {
+                        params: [],
+                        variables: {}
+                    };
+                    
+                    modifiers.modifier_params = char;
+                }
             } else if (modifiers.modifier_params) {
                 modifiers.modifier_params += char;
             }
@@ -263,37 +271,41 @@ let parse = (editor) => {
                 next_context = 'struct';
                 modifiers.struct = true;
             } else if (modifiers.struct) {
-                modifiers.struct = false;
-                
-                context_name = prev;
-                prev = '';
-                structure.contracts[contract].structs[context_name] = {
-                    properties: {}
-                };
-                
-                contract_types[contract].push(context_name);
-                
-                modifiers.struct_properties = char;
+                if (structure.contracts[contract]) {
+                    modifiers.struct = false;
+                    
+                    context_name = prev;
+                    prev = '';
+                    structure.contracts[contract].structs[context_name] = {
+                        properties: {}
+                    };
+                    
+                    contract_types[contract].push(context_name);
+                    
+                    modifiers.struct_properties = char;
+                }
             } else if (modifiers.struct_properties) {
                 modifiers.struct_properties += char;
             }
             
             if (char == ')' && modifiers.event_params) {
-                let event_params = modifiers.event_params.replace(/[\(\)\s]+/g, ' ').trim().split(',');
-                for (let definition of event_params) {
-                    let info = definition.trim().split(' ');
-                    let type = info[0];
-                    let name = info.length == 3 ? info[2] : info[1];
-                    
-                    if (name && context_name && context == 'contract') {
-                        structure.contracts[contract].events[context_name].params.push({
-                            name: name,
-                            type: type
-                        });
+                if (structure.contracts[contract]) {
+                    let event_params = modifiers.event_params.replace(/[\(\)\s]+/g, ' ').trim().split(',');
+                    for (let definition of event_params) {
+                        let info = definition.trim().split(' ');
+                        let type = info[0];
+                        let name = info.length == 3 ? info[2] : info[1];
+                        
+                        if (name && context_name && context == 'contract') {
+                            structure.contracts[contract].events[context_name].params.push({
+                                name: name,
+                                type: type
+                            });
+                        }
                     }
                 }
                 
-                // we can't actually go inside an event, so clear out the ontext_name
+                // we can't actually go inside an event, so clear out the context_name
                 context_name = '';
                 modifiers.event_params = false;
             }
@@ -307,12 +319,14 @@ let parse = (editor) => {
                 }
                 
                 if (modifiers.contract_extends) {
-                    let contract_extends = modifiers.contract_extends.replace('{', '').trim().split(/\s+/);
-                    if (contract_extends[0] == 'is') {
-                        contract_extends.shift();
-                        contract_extends = contract_extends.join(' ').split(',');
-                        
-                        structure.contracts[contract].extends = contract_extends;
+                    if (structure.contracts[contract]) {
+                        let contract_extends = modifiers.contract_extends.replace('{', '').trim().split(/\s+/);
+                        if (contract_extends[0] == 'is') {
+                            contract_extends.shift();
+                            contract_extends = contract_extends.join(' ').split(',');
+                            
+                            structure.contracts[contract].extends = contract_extends;
+                        }
                     }
                     
                     modifiers.contract_extends = false;
@@ -323,25 +337,27 @@ let parse = (editor) => {
                     function_params.shift();
                     
                     if (function_params.length) {
-                        let params = function_params.shift().split(',');
-                        for (let param of params) {
-                            let info = param.trim().split(' ');
-                            let type = info[0];
-                            let name = info[1];
-                            
-                            if (name && context_name && context == 'function') {
-                                structure.contracts[contract].functions[context_name].params.push({
-                                    name: name,
-                                    type: type
-                                });
+                        if (structure.contracts[contract]) {
+                            let params = function_params.shift().split(',');
+                            for (let param of params) {
+                                let info = param.trim().split(' ');
+                                let type = info[0];
+                                let name = info[1];
+                                
+                                if (name && context_name && context == 'function') {
+                                    structure.contracts[contract].functions[context_name].params.push({
+                                        name: name,
+                                        type: type
+                                    });
+                                }
                             }
-                        }
-                        
-                        if (function_params.length == 3) {
-                            function_params.shift();
                             
-                            if (context_name && context == 'function') {
-                                structure.contracts[contract].functions[context_name].returns = function_params.shift().trim();
+                            if (function_params.length == 3) {
+                                function_params.shift();
+                                
+                                if (context_name && context == 'function') {
+                                    structure.contracts[contract].functions[context_name].returns = function_params.shift().trim();
+                                }
                             }
                         }
                     }
@@ -354,17 +370,19 @@ let parse = (editor) => {
                     modifier_params.shift();
                     
                     if (modifier_params.length) {
-                        let params = modifier_params.shift().split(',');
-                        for (let param of params) {
-                            let info = param.trim().split(' ');
-                            let type = info[0];
-                            let name = info[1];
-                            
-                            if (name && context_name && context == 'modifier') {
-                                structure.contracts[contract].modifiers[context_name].params.push({
-                                    name: name,
-                                    type: type
-                                });
+                        if (structure.contracts[contract]) {
+                            let params = modifier_params.shift().split(',');
+                            for (let param of params) {
+                                let info = param.trim().split(' ');
+                                let type = info[0];
+                                let name = info[1];
+                                
+                                if (name && context_name && context == 'modifier') {
+                                    structure.contracts[contract].modifiers[context_name].params.push({
+                                        name: name,
+                                        type: type
+                                    });
+                                }
                             }
                         }
                     }
@@ -377,10 +395,12 @@ let parse = (editor) => {
                 level--;
                 
                 if (modifiers.enum_properties) {
-                    let enum_properties = modifiers.enum_properties.replace(/[\{\}\s]/g, '').split(',');
-                    for (let property of enum_properties) {
-                        if (property && context_name && context == 'enum') {
-                            structure.contracts[contract].enums[context_name].properties.push(property);
+                    if (structure.contracts[contract]) {
+                        let enum_properties = modifiers.enum_properties.replace(/[\{\}\s]/g, '').split(',');
+                        for (let property of enum_properties) {
+                            if (property && context_name && context == 'enum') {
+                                structure.contracts[contract].enums[context_name].properties.push(property);
+                            }
                         }
                     }
                     
@@ -388,16 +408,18 @@ let parse = (editor) => {
                 }
                 
                 if (modifiers.struct_properties) {
-                    let struct_properties = modifiers.struct_properties.replace(/[\{\}\s]+/g, ' ').split(';');
-                    for (let property of struct_properties) {
-                        let info = property.trim().split(' ');
-                        let name = info.pop();
-                        let type = info.join(' ');
-                        
-                        if (name && context_name && context == 'struct') {
-                            structure.contracts[contract].structs[context_name].properties[name] = {
-                                type: type
-                            };
+                    if (structure.contracts[contract]) {
+                        let struct_properties = modifiers.struct_properties.replace(/[\{\}\s]+/g, ' ').split(';');
+                        for (let property of struct_properties) {
+                            let info = property.trim().split(' ');
+                            let name = info.pop();
+                            let type = info.join(' ');
+                            
+                            if (name && context_name && context == 'struct') {
+                                structure.contracts[contract].structs[context_name].properties[name] = {
+                                    type: type
+                                };
+                            }
                         }
                     }
                     
@@ -494,17 +516,23 @@ let parse = (editor) => {
                 }
                 
                 if (context == 'contract') {
-                    structure.contracts[contract].variables[name] = {
-                        type: type
-                    };
+                    if (structure.contracts[contract]) {
+                        structure.contracts[contract].variables[name] = {
+                            type: type
+                        };
+                    }
                 } else if (context == 'function') {
-                    structure.contracts[contract].functions[context_name].variables[name] = {
-                        type: type
-                    };
+                    if (structure.contracts[contract]) {
+                        structure.contracts[contract].functions[context_name].variables[name] = {
+                            type: type
+                        };
+                    }
                 } else if (context == 'modifier') {
-                    structure.contracts[contract].modifiers[context_name].variables[name] = {
-                        type: type
-                    };
+                    if (structure.contracts[contract]) {
+                        structure.contracts[contract].modifiers[context_name].variables[name] = {
+                            type: type
+                        };
+                    }
                 }
                 
                 modifiers.type = false;
@@ -526,17 +554,23 @@ let parse = (editor) => {
                     let type = buffer.join('');
                     
                     if (context == 'contract') {
-                        structure.contracts[contract].variables[name] = {
-                            type: type
-                        };
+                        if (structure.contracts[contract]) {
+                            structure.contracts[contract].variables[name] = {
+                                type: type
+                            };
+                        }
                     } else if (context == 'function') {
-                        structure.contracts[contract].functions[context_name].variables[name] = {
-                            type: type
-                        };
+                        if (structure.contracts[contract]) {
+                            structure.contracts[contract].functions[context_name].variables[name] = {
+                                type: type
+                            };
+                        }
                     } else if (context == 'modifier') {
-                        structure.contracts[contract].modifiers[context_name].variables[name] = {
-                            type: type
-                        };
+                        if (structure.contracts[contract]) {
+                            structure.contracts[contract].modifiers[context_name].variables[name] = {
+                                type: type
+                            };
+                        }
                     }
                     
                     prev = buffer = '';

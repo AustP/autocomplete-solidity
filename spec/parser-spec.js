@@ -277,4 +277,54 @@ describe('AutocompleteSolidity Parser', () => {
             prev: '(amount'
         });
     });
+    
+    it('fails silently when extra closing brackets are present', () => {
+        let editor = editors[0];
+        
+        // close contract early
+        editor.setCursorBufferPosition([2, 17]);
+        editor.setTextInBufferRange([[2, 17], [2, 18]], '}');
+        expect(parser.parse.bind(parser, editor)).not.toThrow();
+        editor.setTextInBufferRange([[2, 17], [2, 18]], '');
+        
+        // close struct early
+        editor.setCursorBufferPosition([4, 18]);
+        editor.setTextInBufferRange([[4, 18], [4, 19]], '}');
+        expect(parser.parse.bind(parser, editor)).not.toThrow();
+        editor.setTextInBufferRange([[4, 18], [4, 19]], '');
+        
+        // close function early
+        editor.setCursorBufferPosition([19, 42]);
+        editor.setTextInBufferRange([[19, 42], [19, 43]], '}');
+        expect(parser.parse.bind(parser, editor)).not.toThrow();
+        editor.setTextInBufferRange([[19, 42], [19, 43]], '');
+        
+        // close if early
+        editor.setCursorBufferPosition([60, 67]);
+        editor.setTextInBufferRange([[60, 67], [60, 68]], '}');
+        expect(parser.parse.bind(parser, editor)).not.toThrow();
+        editor.setTextInBufferRange([[60, 67], [60, 68]], '');
+        
+        editor = editors[2];
+        
+        // close modifier early
+        editor.setCursorBufferPosition([21, 24]);
+        editor.setTextInBufferRange([[21, 24], [21, 25]], '}');
+        expect(parser.parse.bind(parser, editor)).not.toThrow();
+        editor.setTextInBufferRange([[21, 24], [21, 25]], '');
+        
+        editor = editors[3];
+        
+        // close else early
+        editor.setCursorBufferPosition([12, 14]);
+        editor.setTextInBufferRange([[12, 14], [12, 15]], '}');
+        expect(parser.parse.bind(parser, editor)).not.toThrow();
+        editor.setTextInBufferRange([[12, 14], [12, 15]], '');
+        
+        // close while early
+        editor.setCursorBufferPosition([13, 27]);
+        editor.setTextInBufferRange([[13, 27], [13, 28]], '}');
+        expect(parser.parse.bind(parser, editor)).not.toThrow();
+        editor.setTextInBufferRange([[13, 27], [13, 28]], '');
+    });
 });
