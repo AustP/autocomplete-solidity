@@ -10,7 +10,10 @@ class Contract {
     constructor(structure, contract_name) {
         this.context = structure.context;
         this.contracts = structure.contracts;
+        this.functions = {};
+        this.modifiers = {};
         this.name = contract_name;
+        this.variables = {};
         
         for (let name in this.contracts[this.name]) {
             this[name] = this.contracts[this.name][name];
